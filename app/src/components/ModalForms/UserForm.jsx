@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserForm = ({ initialData, onSubmit, isEdit }) => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    activity: '',
-    statusMembership: '',
+    fullName: "",
+    activity: "",
+    statusMembership: "",
   });
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const UserForm = ({ initialData, onSubmit, isEdit }) => {
       </div>
       <div className="button-group text-right">
         <button type="submit" className="btn btn-primary">
-          {isEdit ? 'Update User' : 'Add User'}
+          {isEdit ? "Update User" : "Add User"}
         </button>
       </div>
     </form>

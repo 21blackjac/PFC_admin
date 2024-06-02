@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import {Alert} from "react-bootstrap"
+import { Alert } from "react-bootstrap";
 import "./components_css/SignupCss.css";
 import { useNavigate } from "react-router-dom";
 
@@ -23,13 +23,12 @@ const Signup = () => {
       });
 
       const adminId = response.data.userId;
-      localStorage.setItem('adminId', adminId);
-      console.log('Admin info: ', response.data.userId);
-      setSuccessMessage('Admin created successfully!')
+      localStorage.setItem("adminId", adminId);
+      console.log("Admin info: ", response.data.userId);
+      setSuccessMessage("Admin created successfully!");
       setTimeout(() => {
-        navigate("/DashBoard", {replace: true});
+        navigate("/DashBoard", { replace: true });
       }, 2000);
-      
     } catch (error) {
       console.log(error);
       setErrorMessage("Username or Email already exists");

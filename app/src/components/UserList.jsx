@@ -33,7 +33,10 @@ const UserList = () => {
 
   const handleAddUser = async (user) => {
     try {
-      const response = await axios.post("http://localhost:8050/Users/addUser", user);
+      const response = await axios.post(
+        "http://localhost:8050/Users/addUser",
+        user
+      );
       setUsers([...users, { ...user, id: response.data.id }]);
     } catch (error) {
       console.error("Error adding user:", error);
@@ -42,7 +45,10 @@ const UserList = () => {
 
   const handleUpdateUser = async (user) => {
     try {
-      const response = await axios.put(`http://localhost:8050/Users/updateUser/${user._id}`, user);
+      const response = await axios.put(
+        `http://localhost:8050/Users/updateUser/${user._id}`,
+        user
+      );
       if (response.status === 200) {
         setUsers(users.map((u) => (u._id === user._id ? user : u)));
       }
@@ -53,7 +59,9 @@ const UserList = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      const response = await axios.delete(`http://localhost:8050/Users/deleteUser/${userId}`);
+      const response = await axios.delete(
+        `http://localhost:8050/Users/deleteUser/${userId}`
+      );
       if (response.status === 200) {
         setUsers(users.filter((user) => user._id !== userId));
       }
@@ -101,7 +109,7 @@ const UserList = () => {
           placeholder="Search users..."
           value={searchTerm}
           onChange={handleSearchChange}
-          style={{width: 'auto'}}
+          style={{ width: "auto" }}
         />
         <button className="btn btn-success" onClick={() => handleOpenModal()}>
           <FaPlus className="mr-2" /> Add User
@@ -152,8 +160,14 @@ const UserList = () => {
       >
         <div className="modal-content bg-dark text-light">
           <div className="modal-header">
-            <h5 className="modal-title">{isEdit ? "Update User" : "Add User"}</h5>
-            <button type="button" className="close text-light" onClick={handleCloseModal}>
+            <h5 className="modal-title">
+              {isEdit ? "Update User" : "Add User"}
+            </h5>
+            <button
+              type="button"
+              className="close text-light"
+              onClick={handleCloseModal}
+            >
               <span>&times;</span>
             </button>
           </div>
@@ -165,7 +179,9 @@ const UserList = () => {
             />
           </div>
           <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={handleCloseModal}>Close</button>
+            <button className="btn btn-secondary" onClick={handleCloseModal}>
+              Close
+            </button>
           </div>
         </div>
       </Modal>

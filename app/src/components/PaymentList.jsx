@@ -17,7 +17,9 @@ const PaymentList = () => {
 
   const fetchPayments = async () => {
     try {
-      const response = await axios.get("http://localhost:8050/Payment/Payments");
+      const response = await axios.get(
+        "http://localhost:8050/Payment/Payments"
+      );
       setPayments(response.data);
     } catch (error) {
       console.error("Error fetching payments:", error);
@@ -26,7 +28,10 @@ const PaymentList = () => {
 
   const handleAddPayment = async (payment) => {
     try {
-      const response = await axios.post("http://localhost:8050/Payment/addPayment", payment);
+      const response = await axios.post(
+        "http://localhost:8050/Payment/addPayment",
+        payment
+      );
       setPayments([...payments, { ...payment, id: response.data.id }]);
     } catch (error) {
       console.error("Error adding payment:", error);
@@ -35,7 +40,10 @@ const PaymentList = () => {
 
   const handleUpdatePayment = async (payment) => {
     try {
-      const response = await axios.put(`http://localhost:8050/Payment/updatePayment/${payment._id}`, payment);
+      const response = await axios.put(
+        `http://localhost:8050/Payment/updatePayment/${payment._id}`,
+        payment
+      );
       if (response.status === 200) {
         setPayments(payments.map((u) => (u._id === payment._id ? payment : u)));
       }
@@ -46,7 +54,9 @@ const PaymentList = () => {
 
   const handleDeletePayment = async (paymentId) => {
     try {
-      const response = await axios.delete(`http://localhost:8050/Payment/deletePayment/${paymentId}`);
+      const response = await axios.delete(
+        `http://localhost:8050/Payment/deletePayment/${paymentId}`
+      );
       if (response.status === 200) {
         setPayments(payments.filter((payment) => payment._id !== paymentId));
       }
@@ -78,7 +88,9 @@ const PaymentList = () => {
 
   return (
     <div className="container mx-auto mt-5">
-      <div style={{ display: 'flex', justifyContent: 'center', color: 'white' }}>
+      <div
+        style={{ display: "flex", justifyContent: "center", color: "white" }}
+      >
         <h1>Pricing Plan</h1>
       </div>
       <div className="cards-container">
@@ -88,15 +100,15 @@ const PaymentList = () => {
               <p className="card__heading">{payment.duration}</p>
               <p className="card__price">{payment.price}DH/month</p>
               <ul className="card_bullets flow" role="list">
-                {payment.description.split(', ').map((desc, index) => (
+                {payment.description.split(", ").map((desc, index) => (
                   <li key={index}>{desc}</li>
                 ))}
               </ul>
               <div className="card__actions">
                 <div className="updateButton">
-                <FaEdit onClick={() => handleOpenModal(payment)} />
+                  <FaEdit onClick={() => handleOpenModal(payment)} />
                 </div>
-                  <FaTrash onClick={() => handleDeletePayment(payment._id)} />
+                <FaTrash onClick={() => handleDeletePayment(payment._id)} />
               </div>
             </div>
             <div className="overlay cards__inner"></div>
@@ -106,7 +118,11 @@ const PaymentList = () => {
       <button className="add-payment-button" onClick={() => handleOpenModal()}>
         <FaPlus /> Add Payment
       </button>
-      <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal} contentLabel="Payment Modal">
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        contentLabel="Payment Modal"
+      >
         <PaymentForm
           payment={currentPayment}
           onSubmit={handleFormSubmit}
