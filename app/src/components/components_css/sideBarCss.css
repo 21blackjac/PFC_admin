@@ -160,6 +160,7 @@ img {
 .Dashboard {
   display: flex;
   gap: 10px;
+  background: black;
 }
 
 :is(.header, .search-box, .side-nav__link, .profile) {
