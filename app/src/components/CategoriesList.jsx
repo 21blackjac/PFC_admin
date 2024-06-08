@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import CategorieForm from "./ModalForms/CategorieForm";
+import { ToastContainer, toast } from 'react-toastify';
 import "./components_css/CategorieCss.css";
 
 const CategoryList = () => {
@@ -20,7 +21,7 @@ const CategoryList = () => {
       const response = await axios.get("http://localhost:8050/Categorie/Categories");
       setCategories(response.data);
     } catch (error) {
-      console.error("Error fetching categories:", error.message);
+      console.error("Error fetching categories:", error);
     }
   };
 
@@ -28,8 +29,10 @@ const CategoryList = () => {
     try {
       const response = await axios.post("http://localhost:8050/Categorie/addCategorie", category);
       setCategories([...categories, { ...category, _id: response.data._id }]);
+      toast.success("Category added successfully!");
     } catch (error) {
       console.error("Error adding category:", error);
+      toast.error("Failed to add category.");
     }
   };
 
@@ -38,9 +41,11 @@ const CategoryList = () => {
       const response = await axios.put(`http://localhost:8050/Categorie/updateCategorie/${category._id}`, category);
       if (response.status === 200) {
         setCategories(categories.map((u) => (u._id === category._id ? category : u)));
+        toast.success("Category updated successfully!");
       }
     } catch (error) {
       console.error("Error updating category:", error);
+      toast.error("Failed to update category.");
     }
   };
 
@@ -49,9 +54,11 @@ const CategoryList = () => {
       const response = await axios.delete(`http://localhost:8050/Categorie/deleteCategorie/${categoryId}`);
       if (response.status === 200) {
         setCategories(categories.filter((category) => category._id !== categoryId));
+        toast.success("Category deleted successfully!");
       }
     } catch (error) {
       console.error("Error deleting category:", error);
+      toast.error("Failed to delete category.");
     }
   };
 
@@ -102,6 +109,7 @@ const CategoryList = () => {
       <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
         <CategorieForm initialData={currentCategory} onSubmit={handleFormSubmit} isEdit={isEdit} />
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

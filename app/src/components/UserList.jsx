@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import UserForm from "./ModalForms/UserForm";
 import axios from "axios";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
 
 Modal.setAppElement("#root");
 
@@ -38,8 +39,10 @@ const UserList = () => {
         user
       );
       setUsers([...users, { ...user, id: response.data.id }]);
+      toast.success("User created successfully!");
     } catch (error) {
       console.error("Error adding user:", error);
+      toast.error('Faild to add user')
     }
   };
 
@@ -51,9 +54,11 @@ const UserList = () => {
       );
       if (response.status === 200) {
         setUsers(users.map((u) => (u._id === user._id ? user : u)));
+        toast.success("User updated successfully!");
       }
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.error('Faild to update user')
     }
   };
 
@@ -64,9 +69,11 @@ const UserList = () => {
       );
       if (response.status === 200) {
         setUsers(users.filter((user) => user._id !== userId));
+        toast.success("User deleted successfully!");
       }
     } catch (error) {
       console.error("Error deleting user:", error);
+      toast.error('Faild to delete user')
     }
   };
 
@@ -185,6 +192,7 @@ const UserList = () => {
           </div>
         </div>
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

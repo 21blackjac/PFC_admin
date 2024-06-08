@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -8,6 +7,8 @@ import CategoriesList from "./components/CategoriesList";
 import PaymentList from "./components/PaymentList";
 import AdminInfo from "./components/AdminInfo";
 import SideBar from "./components/SideBar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./components/components_css/userListCss.css";
 
 const Layout = ({ children }) => {
@@ -78,6 +79,7 @@ const App = () => {
           />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 };

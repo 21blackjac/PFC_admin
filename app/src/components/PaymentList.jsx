@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import PaymentForm from "./ModalForms/PaymentForm";
 import axios from "axios";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
 import "./components_css/PaymentListCss.css";
 
 const PaymentList = () => {
@@ -33,8 +34,10 @@ const PaymentList = () => {
         payment
       );
       setPayments([...payments, { ...payment, id: response.data.id }]);
+      toast.success("Payment added successfully!")
     } catch (error) {
       console.error("Error adding payment:", error);
+      toast.error("Faild to add payment")
     }
   };
 
@@ -46,9 +49,11 @@ const PaymentList = () => {
       );
       if (response.status === 200) {
         setPayments(payments.map((u) => (u._id === payment._id ? payment : u)));
+        toast.success("Payment updated successfully!")
       }
     } catch (error) {
       console.error("Error updating payment:", error);
+      toast.error("Faild to update payment")
     }
   };
 
@@ -59,9 +64,11 @@ const PaymentList = () => {
       );
       if (response.status === 200) {
         setPayments(payments.filter((payment) => payment._id !== paymentId));
+        toast.success("Payment deleted successfully!")
       }
     } catch (error) {
       console.error("Error deleting payment:", error);
+      toast.error("Faild to delete payment")
     }
   };
 
@@ -129,6 +136,7 @@ const PaymentList = () => {
           onClose={handleCloseModal}
         />
       </Modal>
+      <ToastContainer />
     </div>
   );
 };

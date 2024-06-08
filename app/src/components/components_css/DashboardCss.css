@@ -1,0 +1,83 @@
+.dashboard-container {
+  padding: 20px;
+  color: white;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.dashboard-card {
+  display: flex;
+  align-items: center;
+  background: #2b2b2b;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 30%;
+  color: #eceff1;
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-right: 10px;
+}
+
+.card-info h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.card-info p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.dashboard-section {
+  margin-bottom: 30px;
+}
+
+.dashboard-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.admin-list {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 20px;
+}
+
+.admin-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.admin-profile-picture {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.admin-info p {
+  margin: 0;
+  color: black;
+}
+
+.admin-info p:first-child {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
