@@ -4,6 +4,7 @@ import UserForm from "./ModalForms/UserForm";
 import axios from "axios";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
+import "./components_css/userListCss.css";
 
 Modal.setAppElement("#root");
 

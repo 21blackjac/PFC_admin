@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from 'react-toastify';
 import "./components_css/sideBarCss.css";
-import { useState, useEffect } from "react";
 
 const SideBar = () => {
   const [adminInfo, setAdminInfo] = useState([]);
@@ -31,15 +32,18 @@ const SideBar = () => {
 
   const navigate = useNavigate();
   const logout = async () => {
+  
     try {
-      const response = await axios.get("http://localhost:8050/Admin/logout");
-      if (response.status === 200) {
-        localStorage.removeItem("adminId"); // Remove admin ID on logout
-        console.log(response.data);
-        navigate("/", { replace: true });
-      }
+      await axios.get("http://localhost:8050/Admin/logout");
+      localStorage.removeItem("adminId"); // Remove admin ID on logout
+  
+      // Notify user of successful logout
+      toast.success("Logged out successfully!");
+  
+      navigate("/", { replace: true });
     } catch (error) {
-      console.log(error);
+      console.error("Error logging out:", error);
+      toast.error("Failed to log out. Please try again.");
     }
   };
 

@@ -1,4 +1,7 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import DashBoard from "./components/DashBoard";
@@ -7,9 +10,6 @@ import CategoriesList from "./components/CategoriesList";
 import PaymentList from "./components/PaymentList";
 import AdminInfo from "./components/AdminInfo";
 import SideBar from "./components/SideBar";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "./components/components_css/userListCss.css";
 
 const Layout = ({ children }) => {
   return (
@@ -33,53 +33,53 @@ const Layout = ({ children }) => {
 const App = () => {
   return (
     <div id="root">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/dashboard"
-            element={
-              <Layout>
-                <DashBoard />
-              </Layout>
-            }
-          />
-          <Route
-            path="/userlist"
-            element={
-              <Layout>
-                <UserList />
-              </Layout>
-            }
-          />
-          <Route
-            path="/categorieslist"
-            element={
-              <Layout>
-                <CategoriesList />
-              </Layout>
-            }
-          />
-          <Route
-            path="/paymentlist"
-            element={
-              <Layout>
-                <PaymentList />
-              </Layout>
-            }
-          />
-          <Route
-            path="/admininfo"
-            element={
-              <Layout>
-                <AdminInfo />
-              </Layout>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-      <ToastContainer />
+        <BrowserRouter>
+          <ToastContainer />
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route
+              path="/dashboard"
+              element={
+                <Layout>
+                  <DashBoard />
+                </Layout>
+              }
+            />
+            <Route
+              path="/userlist"
+              element={
+                <Layout>
+                  <UserList />
+                </Layout>
+              }
+            />
+            <Route
+              path="/categorieslist"
+              element={
+                <Layout>
+                  <CategoriesList />
+                </Layout>
+              }
+            />
+            <Route
+              path="/paymentlist"
+              element={
+                <Layout>
+                  <PaymentList />
+                </Layout>
+              }
+            />
+            <Route
+              path="/admininfo"
+              element={
+                <Layout>
+                  <AdminInfo />
+                </Layout>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
     </div>
   );
 };

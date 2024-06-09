@@ -105,7 +105,9 @@ const CategoryList = () => {
           </div>
         ))}
       </div>
-      <button onClick={() => handleOpenModal()} className="btn btn-primary"><FaPlus /> Add Category</button>
+      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <button onClick={() => handleOpenModal()} className="btn btn-primary" style={{background: 'green', border: 0, height: '3rem'}}><FaPlus /> Add Category</button>
+      </div>
       <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
         <CategorieForm initialData={currentCategory} onSubmit={handleFormSubmit} isEdit={isEdit} />
       </Modal>
