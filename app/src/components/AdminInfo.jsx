@@ -16,11 +16,11 @@ const AdminInfo = () => {
 
   const fetchAdminData = async () => {
     try {
-      const response = await axios.get("http://localhost:8050/Admin/display");
-      const adminData = response.data[0]; // Assuming the first admin is the one to be edited
+      const adminId = localStorage.getItem("adminId");
+      const response = await axios.get(`http://localhost:8050/Admin/display/${adminId}`);
       setFormData({
-        username: adminData.username,
-        email: adminData.email,
+        username: response.data.username,
+        email: response.data.email,
         password: "",
       });
     } catch (error) {
