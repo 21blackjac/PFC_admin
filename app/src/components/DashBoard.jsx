@@ -5,8 +5,7 @@ import "./components_css/DashboardCss.css";
 
 const DashBoard = () => {
   const [userCount, setUserCount] = useState(0);
-  const [paymentCount, setPaymentCount] = useState(0);
-  const [categoryCount, setCategoryCount] = useState(0);
+  const [tourCount, setTourCount] = useState(0);
   const [adminList, setAdminList] = useState([]);
 
   useEffect(() => {
@@ -15,23 +14,17 @@ const DashBoard = () => {
 
   const fetchSummaryData = async () => {
     try {
-      const [usersRes, paymentsRes, categoriesRes, adminListRes] =
-        await Promise.all([
-          axios.get("http://localhost:8050/Users/usersCount"),
-          axios.get("http://localhost:8050/Payment/paymentsCount"),
-          axios.get("http://localhost:8050/Categorie/categoriesCount"),
-          axios.get("http://localhost:8050/Admin/display"),
-        ]);
+      const userResponse = await axios.get("http://localhost:8050/Users/usersCount");
+      const tourResponse = await axios.get("http://localhost:8050/Tours/toursCount");
+      const adminResponse = await axios.get("http://localhost:8050/Admin/adminsList");
 
-      setAdminList(adminListRes.data);
-      setUserCount(usersRes.data.count);
-      setPaymentCount(paymentsRes.data.count);
-      setCategoryCount(categoriesRes.data.count);
-      console.log("Admin List Response:", adminListRes.data);
+      setUserCount(userResponse.data.count);
+      setTourCount(tourResponse.data.count);
+      setAdminList(adminResponse.data);
     } catch (error) {
       console.error("Error fetching summary data:", error);
     }
-  };
+  }
 
   return (
     <div className="dashboard-container">
@@ -49,15 +42,8 @@ const DashBoard = () => {
         <div className="dashboard-card">
           <FaMoneyBill className="card-icon" />
           <div className="card-info">
-            <h2>{paymentCount}</h2>
-            <p>Total Payments</p>
-          </div>
-        </div>
-        <div className="dashboard-card">
-          <FaList className="card-icon" />
-          <div className="card-info">
-            <h2>{categoryCount}</h2>
-            <p>Total Categories</p>
+            <h2>{tourCount}</h2>
+            <p>Total Tours</p>
           </div>
         </div>
       </div>

@@ -6,8 +6,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import DashBoard from "./components/DashBoard";
 import UserList from "./components/UserList";
-import CategoriesList from "./components/CategoriesList";
-import PaymentList from "./components/PaymentList";
+import ToursList from "./components/ToursList";
 import AdminInfo from "./components/AdminInfo";
 import SideBar from "./components/SideBar";
 
@@ -36,8 +35,8 @@ const App = () => {
         <BrowserRouter>
           <ToastContainer />
           <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} /> */}
             <Route
               path="/dashboard"
               element={
@@ -55,18 +54,10 @@ const App = () => {
               }
             />
             <Route
-              path="/categorieslist"
+              path="/ToursList"
               element={
                 <Layout>
-                  <CategoriesList />
-                </Layout>
-              }
-            />
-            <Route
-              path="/paymentlist"
-              element={
-                <Layout>
-                  <PaymentList />
+                  <ToursList />
                 </Layout>
               }
             />

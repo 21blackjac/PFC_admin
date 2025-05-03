@@ -6,13 +6,21 @@
   color: #eceff1;
 }
 
-.cards {
-  position: relative;
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-content: center;
+  margin-top: 3em;
+}
+
+.cards__inner {
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .card {
   --flow-space: 0.5em;
-  --hsl: var(--hue), var(--saturation), var(--lightness);
   flex: 1 1 14rem;
   padding: 1.5em 2em;
   display: grid;
@@ -23,12 +31,6 @@
   background-color: #2b2b2b;
   border: 1px solid #eceff133;
   border-radius: 15px;
-}
-
-.card:nth-child(1) {
-  --hue: 165;
-  --saturation: 82.26%;
-  --lightness: 51.37%;
 }
 
 .card__bullets {
@@ -45,28 +47,39 @@
   font-weight: 700;
 }
 
-.cards__inner {
-  box-sizing: border-box;
-  width: fit-content;
-}
-
 .flow > * + * {
   margin-top: var(--flow-space, 1.25em);
 }
 
-.cta {
-  display: block;
-  align-self: end;
-  margin: 1em 0 0.5em 0;
-  text-align: center;
-  text-decoration: none;
-  color: #fff;
-  background-color: transparent;
-  outline: 1px solid white;
-  padding: 0.7em;
+.card__actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1em;
+}
+
+.card__actions svg {
+  cursor: pointer;
+  color: #ff0000;
+  font-size: 23px;
+}
+
+.updateButton svg {
+  color: #0051ff;
+}
+
+.add-payment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2em auto;
+  padding: 0.7em 1em;
+  background-color: #0d0d0d;
+  color: white;
+  border: none;
   border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
+  cursor: pointer;
+  font-size: 1.2em;
+  background: green !important;
 }
 
 .card:hover {
@@ -84,41 +97,4 @@
 .card:hover > .cta {
   outline: none;
   background-color: #0d0d0d;
-}
-
-.responsive-card {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  justify-content: center;
-  margin-top: 3em;
-}
-
-.card__image {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-
-.card__description {
-  font-size: 0.875em;
-  color: #ccc;
-}
-
-.card__actions {
-  display: flex;
-  gap: 10px;
-}
-
-.card__actions button {
-  background: none;
-  border: none;
-  color: #eceff1;
-  cursor: pointer;
-  font-size: 1.25em;
 }

@@ -107,24 +107,7 @@ const SideBar = () => {
                 </Link>
               </li>
               <li className="side-nav__item">
-                <Link to={"/categorieslist"}>
-                  <div className="Dashboard">
-                    <div>
-                      <span className="icon">
-                        <img
-                          src="/assets/categoriesListIcon.png"
-                          style={{ borderRadius: "50%" }}
-                        />
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text">CategoriesList</span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-              <li className="side-nav__item">
-                <Link to={"/paymentlist"}>
+                <Link to={"/ToursList"}>
                   <div className="Dashboard">
                     <div>
                       <span className="icon">
@@ -135,7 +118,7 @@ const SideBar = () => {
                       </span>
                     </div>
                     <div>
-                      <span className="text">PaymentList</span>
+                      <span className="text">ToursList</span>
                     </div>
                   </div>
                 </Link>
