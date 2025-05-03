@@ -58,7 +58,7 @@ const SideBar = () => {
                 style={{ height: "60px", borderRadius: "50%" }}
               />
             </span>
-            <span className="name">Happy Fitness</span>
+            <span className="name">Happy-Fitness</span>
           </div>
           <menu className="side-nav">
             <ul>
