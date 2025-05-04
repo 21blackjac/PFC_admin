@@ -1,159 +1,179 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Modal from "react-modal";
-import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
-import CategorieForm from "./ModalForms/CategorieForm";
-import { ToastContainer, toast } from "react-toastify";
-import "./components_css/ToursListCss.css";
+import { FaPlus } from "react-icons/fa";
 
-const ToursList = () => {
-  const [categories, setCategories] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState(null);
-  const [isEdit, setIsEdit] = useState(false);
+export default function ToursList() {
+  const [tours, setTours] = useState([]);
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    price: "",
+    duration_days: "",
+    destination_id: "",
+    image_url: "",
+  });
+  const [editingId, setEditingId] = useState(null);
+
+  const fetchTours = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/tours");
+      setTours(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    fetchCategories();
+    fetchTours();
   }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8050/Categorie/Categories"
-      );
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleAddCategory = async (category) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8050/Categorie/addCategorie",
-        category
-      );
-      setCategories([...categories, { ...category, _id: response.data._id }]);
-      toast.success("Category added successfully!");
-    } catch (error) {
-      console.error("Error adding category:", error);
-      toast.error("Failed to add category.");
-    }
-  };
-
-  const handleUpdateCategory = async (category) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:8050/Categorie/updateCategorie/${category._id}`,
-        category
-      );
-      if (response.status === 200) {
-        setCategories(
-          categories.map((u) => (u._id === category._id ? category : u))
-        );
-        toast.success("Category updated successfully!");
+      if (editingId) {
+        await axios.put(`http://localhost:8000/api/tours/${editingId}`, form);
+      } else {
+        await axios.post("http://localhost:8000/api/tours", form);
       }
-    } catch (error) {
-      console.error("Error updating category:", error);
-      toast.error("Failed to update category.");
+      setForm({
+        title: "",
+        description: "",
+        price: "",
+        duration_days: "",
+        destination_id: "",
+        image_url: "",
+      });
+      setEditingId(null);
+      fetchTours();
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleDeleteCategory = async (categoryId) => {
+  const handleEdit = (tour) => {
+    setForm(tour);
+    setEditingId(tour.id);
+  };
+
+  const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8050/Categorie/deleteCategorie/${categoryId}`
-      );
-      if (response.status === 200) {
-        setCategories(
-          categories.filter((category) => category._id !== categoryId)
-        );
-        toast.success("Category deleted successfully!");
-      }
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      toast.error("Failed to delete category.");
+      await axios.delete(`http://localhost:8000/api/tours/${id}`);
+      fetchTours();
+    } catch (err) {
+      console.error(err);
     }
-  };
-
-  const handleOpenModal = (category = null) => {
-    setCurrentCategory(category);
-    setIsEdit(!!category);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setCurrentCategory(null);
-    setIsEdit(false);
-  };
-
-  const handleFormSubmit = (category) => {
-    if (isEdit) {
-      handleUpdateCategory(category);
-    } else {
-      handleAddCategory(category);
-    }
-    handleCloseModal();
   };
 
   return (
-    <div className="container mx-auto mt-5">
-      <div
-        style={{ display: "flex", justifyContent: "center", color: "white" }}
+    <div className="p-6 bg-base-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-center">Tour Management</h1>
+
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-base-200 p-6 rounded-box mb-8 shadow"
       >
-        <h1>Tours List</h1>
-      </div>
-      <div className="row mt-3">
-        {categories.map((category) => (
-          <div key={category._id} className="col-md-4 mb-3">
-            <div className="cards__inner responsive-card">
-              <div className="cards__card card">
-                <p className="card__heading">{category.name}</p>
-                <img
-                  src={category.imageUrl}
-                  alt={category.name}
-                  className="card__image"
-                />
-                <p className="card__description">{category.description}</p>
-                <div className="card__actions">
-                  <button onClick={() => handleOpenModal(category)}>
-                    <FaEdit style={{ color: "blue" }} />
-                  </button>
-                  <button onClick={() => handleDeleteCategory(category._id)}>
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <button
-          onClick={() => handleOpenModal()}
-          className="btn btn-primary"
-          style={{ background: "green", border: 0, height: "3rem" }}
-        >
-          <FaPlus /> Add Tours
-        </button>
-      </div>
-      <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
-        <CategorieForm
-          initialData={currentCategory}
-          onSubmit={handleFormSubmit}
-          isEdit={isEdit}
+        <input
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          className="input input-bordered"
+          placeholder="Title"
+          required
         />
-      </Modal>
-      <ToastContainer />
+        <input
+          name="price"
+          value={form.price}
+          onChange={handleChange}
+          className="input input-bordered"
+          placeholder="Price"
+          required
+        />
+        <input
+          name="duration_days"
+          value={form.duration_days}
+          onChange={handleChange}
+          className="input input-bordered"
+          placeholder="Duration (Days)"
+          required
+        />
+        <input
+          name="destination_id"
+          value={form.destination_id}
+          onChange={handleChange}
+          className="input input-bordered"
+          placeholder="Destination ID"
+          required
+        />
+        <input
+          name="image_url"
+          value={form.image_url}
+          onChange={handleChange}
+          className="input input-bordered"
+          placeholder="Image URL"
+        />
+        <textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          className="textarea textarea-bordered col-span-full"
+          placeholder="Description"
+        ></textarea>
+        <button className="btn btn-success w-full col-span-full">
+          <FaPlus className="mr-2" /> {editingId ? "Update Tour" : "Add Tour"}
+        </button>
+      </form>
+
+      <div className="overflow-x-auto bg-base-200 rounded-box shadow">
+        <table className="table w-full">
+          <thead className="bg-base-300">
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Duration</th>
+              <th>Destination</th>
+              <th>Image</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tours.map((t) => (
+              <tr key={t.id}>
+                <td>{t.id}</td>
+                <td>{t.title}</td>
+                <td>{t.price}</td>
+                <td>{t.duration_days} days</td>
+                <td>{t.destination_id}</td>
+                <td>
+                  <img
+                    src={t.image_url}
+                    alt="tour"
+                    className="w-16 h-12 object-cover rounded"
+                  />
+                </td>
+                <td className="flex flex-wrap gap-2">
+                  <button
+                    className="btn btn-sm btn-info"
+                    onClick={() => handleEdit(t)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-sm btn-error"
+                    onClick={() => handleDelete(t.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-};
-
-export default ToursList;
+}

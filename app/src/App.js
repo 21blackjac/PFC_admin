@@ -9,6 +9,7 @@ import UserList from "./components/UserList";
 import ToursList from "./components/ToursList";
 import AdminInfo from "./components/AdminInfo";
 import SideBar from "./components/SideBar";
+import BookingsList from "./components/BookingsList";
 
 const Layout = ({ children }) => {
   return (
@@ -58,6 +59,14 @@ const App = () => {
               element={
                 <Layout>
                   <ToursList />
+                </Layout>
+              }
+            />
+            <Route
+              path="/BookingsList"
+              element={
+                <Layout>
+                  <BookingsList />
                 </Layout>
               }
             />

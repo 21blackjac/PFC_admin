@@ -124,6 +124,23 @@ const SideBar = () => {
                 </Link>
               </li>
               <li className="side-nav__item">
+                <Link to={"/BookingsList"}>
+                  <div className="Dashboard">
+                    <div>
+                      <span className="icon">
+                        <img
+                          src="/assets/bookingsListIcon.png"
+                          style={{ height: "20px" }}
+                        />
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text">BookingsList</span>
+                    </div>
+                  </div>
+                </Link>
+              </li>
+              <li className="side-nav__item">
                 <button type="submit" onClick={logout}>
                   <div className="Dashboard">
                     <div style={{ width: "22px" }}>
