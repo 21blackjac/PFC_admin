@@ -11,6 +11,7 @@ import AdminInfo from "./components/AdminInfo";
 import SideBar from "./components/SideBar";
 import BookingsList from "./components/BookingsList";
 
+
 const Layout = ({ children }) => {
   return (
     <div style={{ display: "flex" }}>

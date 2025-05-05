@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { FaPlus } from "react-icons/fa";
+import BookingForm from "../components/ModalForms/BookingForm";
 
-export default function BookingsList() {
+const BookingsList = () => {
   const [bookings, setBookings] = useState([]);
   const [form, setForm] = useState({
     user_id: "",
@@ -13,26 +13,20 @@ export default function BookingsList() {
     status: "pending",
   });
   const [editingId, setEditingId] = useState(null);
+  const modalRef = useRef();
 
+  // Fetch all bookings
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/bookings");
-      setBookings(res.data);
+      const response = await axios.get("http://localhost:8000/api/bookings");
+      setBookings(response.data);
     } catch (err) {
       console.error(err);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Submit booking (create or update)
+  const handleSubmit = async () => {
     try {
       if (editingId) {
         await axios.put(
@@ -42,26 +36,36 @@ export default function BookingsList() {
       } else {
         await axios.post("http://localhost:8000/api/bookings", form);
       }
-      setForm({
-        user_id: "",
-        tour_id: "",
-        booking_date: "",
-        number_of_people: 1,
-        total_price: "",
-        status: "pending",
-      });
-      setEditingId(null);
       fetchBookings();
+      setEditingId(null);
+      modalRef.current.closeModal(); // hide modal
     } catch (err) {
       console.error(err);
     }
   };
 
+  // Show modal with empty form
+  const handleAddBooking = () => {
+    setForm({
+      user_id: "",
+      tour_id: "",
+      booking_date: "",
+      number_of_people: 1,
+      total_price: "",
+      status: "pending",
+    });
+    setEditingId(null);
+    modalRef.current?.showModal();
+  };
+
+  // Edit booking
   const handleEdit = (booking) => {
     setForm(booking);
     setEditingId(booking.id);
+    modalRef.current?.showModal();
   };
 
+  // Delete booking
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/api/bookings/${id}`);
@@ -71,110 +75,69 @@ export default function BookingsList() {
     }
   };
 
+  useEffect(() => {
+    fetchBookings();
+  }, []);
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Bookings</h1>
+      <h1 className="text-2xl font-bold mb-4" style={{ color: "wheat" }}>
+        Bookings
+      </h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4 bg-base-200 p-4 rounded-box"
-      >
-        <input
-          name="user_id"
-          value={form.user_id}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="User ID"
-          required
-        />
-        <input
-          name="tour_id"
-          value={form.tour_id}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Tour ID"
-          required
-        />
-        <input
-          type="date"
-          name="booking_date"
-          value={form.booking_date}
-          onChange={handleChange}
-          className="input input-bordered"
-        />
-        <input
-          type="number"
-          name="number_of_people"
-          value={form.number_of_people}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="People"
-        />
-        <input
-          name="total_price"
-          value={form.total_price}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Total Price"
-        />
-        <select
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-          className="select select-bordered"
-        >
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-        <button className="btn btn-success col-span-1 md:col-span-2">
-          <FaPlus className="mr-2" /> {editingId ? "Update Booking" : "Add Booking"}
-        </button>
-      </form>
+      <button className="btn btn-success mb-4" onClick={handleAddBooking}>
+        Add Booking
+      </button>
 
-      <div className="overflow-x-auto">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>User</th>
-              <th>Tour</th>
-              <th>Date</th>
-              <th>People</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Actions</th>
+      <table className="table w-full bg-white shadow-md">
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Tour ID</th>
+            <th>Date</th>
+            <th>People</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.map((booking) => (
+            <tr key={booking.id}>
+              <td>{booking.user_id}</td>
+              <td>{booking.tour_id}</td>
+              <td>{booking.booking_date}</td>
+              <td>{booking.number_of_people}</td>
+              <td>{booking.total_price}</td>
+              <td>{booking.status}</td>
+              <td className="space-x-2">
+                <button
+                  className="btn btn-sm btn-warning"
+                  onClick={() => handleEdit(booking)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-sm btn-error"
+                  onClick={() => handleDelete(booking.id)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {bookings.map((b) => (
-              <tr key={b.id}>
-                <td>{b.id}</td>
-                <td>{b.user_id}</td>
-                <td>{b.tour_id}</td>
-                <td>{b.booking_date}</td>
-                <td>{b.number_of_people}</td>
-                <td>{b.total_price}</td>
-                <td>{b.status}</td>
-                <td className="flex gap-2">
-                  <button
-                    className="btn btn-sm btn-info"
-                    onClick={() => handleEdit(b)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-sm btn-error"
-                    onClick={() => handleDelete(b.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Booking Modal */}
+      <BookingForm
+        ref={modalRef}
+        onSubmit={handleSubmit}
+        form={form}
+        setForm={setForm}
+      />
     </div>
   );
-}
+};
+
+export default BookingsList;
