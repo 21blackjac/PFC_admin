@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import TourForm from "./ModalForms/TourForm";
 import axios from "axios";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
-export default function ToursList() {
+const ToursList = () => {
   const [tours, setTours] = useState([]);
   const [form, setForm] = useState({
     title: "",
@@ -13,6 +14,8 @@ export default function ToursList() {
     image_url: "",
   });
   const [editingId, setEditingId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTours = async () => {
     try {
@@ -27,12 +30,11 @@ export default function ToursList() {
     fetchTours();
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       if (editingId) {
         await axios.put(`http://localhost:8000/api/tours/${editingId}`, form);
@@ -48,6 +50,7 @@ export default function ToursList() {
         image_url: "",
       });
       setEditingId(null);
+      setIsModalOpen(false);
       fetchTours();
     } catch (err) {
       console.error(err);
@@ -57,6 +60,7 @@ export default function ToursList() {
   const handleEdit = (tour) => {
     setForm(tour);
     setEditingId(tour.id);
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
@@ -68,69 +72,47 @@ export default function ToursList() {
     }
   };
 
+  const filteredTours = tours.filter((t) =>
+    t.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="p-6 bg-base-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-center">Tour Management</h1>
+    <div className="container mt-5 bg-dark text-light p-4 rounded">
+      <h1 className="text-center mb-4">Tour Management</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-base-200 p-6 rounded-box mb-8 shadow"
-      >
+      <div className="d-flex justify-content-between mb-3">
         <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Title"
-          required
+          type="text"
+          className="form-control"
+          placeholder="Search tours..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{ width: "300px", height: "40px" }}
         />
-        <input
-          name="price"
-          value={form.price}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Price"
-          required
-        />
-        <input
-          name="duration_days"
-          value={form.duration_days}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Duration (Days)"
-          required
-        />
-        <input
-          name="destination_id"
-          value={form.destination_id}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Destination ID"
-          required
-        />
-        <input
-          name="image_url"
-          value={form.image_url}
-          onChange={handleChange}
-          className="input input-bordered"
-          placeholder="Image URL"
-        />
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          className="textarea textarea-bordered col-span-full"
-          placeholder="Description"
-        ></textarea>
-        <button className="btn btn-success w-full col-span-full">
-          <FaPlus className="mr-2" /> {editingId ? "Update Tour" : "Add Tour"}
+        <button
+          className="btn btn-success"
+          style={{ height: "40px" }}
+          onClick={() => {
+            setForm({
+              title: "",
+              description: "",
+              price: "",
+              duration_days: "",
+              destination_id: "",
+              image_url: "",
+            });
+            setEditingId(null);
+            setIsModalOpen(true);
+          }}
+        >
+          <FaPlus className="me-1" /> Add Tour
         </button>
-      </form>
+      </div>
 
-      <div className="overflow-x-auto bg-base-200 rounded-box shadow">
-        <table className="table w-full">
-          <thead className="bg-base-300">
-            <tr>
+      <div className="overflow-x-auto">
+        <table className="table table-dark table-striped">
+          <thead className="bg-gray-200">
+            <tr className="text-gray-700">
               <th>ID</th>
               <th>Title</th>
               <th>Price</th>
@@ -141,7 +123,7 @@ export default function ToursList() {
             </tr>
           </thead>
           <tbody>
-            {tours.map((t) => (
+            {filteredTours.map((t) => (
               <tr key={t.id}>
                 <td>{t.id}</td>
                 <td>{t.title}</td>
@@ -152,21 +134,26 @@ export default function ToursList() {
                   <img
                     src={t.image_url}
                     alt="tour"
-                    className="w-16 h-12 object-cover rounded"
+                    className="rounded"
+                    style={{
+                      width: "60px",
+                      height: "45px",
+                      objectFit: "cover",
+                    }}
                   />
                 </td>
-                <td className="flex flex-wrap gap-2">
+                <td>
                   <button
-                    className="btn btn-sm btn-info"
+                    className="btn btn-primary btn-sm me-2"
                     onClick={() => handleEdit(t)}
                   >
-                    Edit
+                    <FaEdit className="me-1" /> Edit
                   </button>
                   <button
-                    className="btn btn-sm btn-error"
+                    className="btn btn-danger btn-sm"
                     onClick={() => handleDelete(t.id)}
                   >
-                    Delete
+                    <FaTrash className="me-1" /> Delete
                   </button>
                 </td>
               </tr>
@@ -174,6 +161,17 @@ export default function ToursList() {
           </tbody>
         </table>
       </div>
+
+      <TourForm
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        form={form}
+        setForm={setForm}
+        onSubmit={handleSubmit}
+        editingId={editingId}
+      />
     </div>
   );
-}
+};
+
+export default ToursList;

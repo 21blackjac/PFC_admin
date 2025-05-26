@@ -58,7 +58,7 @@ const SideBar = () => {
                 style={{ height: "60px", borderRadius: "50%" }}
               />
             </span>
-            <span className="name">HappyFitness</span>
+            <span className="name">Espace Admin</span>
           </div>
           <menu className="side-nav">
             <ul>
@@ -130,7 +130,7 @@ const SideBar = () => {
                       <span className="icon">
                         <img
                           src="/assets/bookingsListIcon.png"
-                          style={{ height: "20px" }}
+                          style={{ borderRadius: "50%" }}
                         />
                       </span>
                     </div>

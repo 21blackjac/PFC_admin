@@ -1,47 +1,105 @@
-import React, { forwardRef, useState, useImperativeHandle } from 'react';
+import { toast } from "react-toastify";
 
-const BookingForm = forwardRef(({ onSubmit, form, setForm }, ref) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useImperativeHandle(ref, () => ({
-    showModal: () => setIsOpen(true),
-    closeModal: () => setIsOpen(false),
-  }));
-
+const BookingForm = ({ isOpen, setIsOpen, form, setForm, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(); // submit logic passed from parent
+    onSubmit();
+    toast.success("Booking saved successfully!");
     setIsOpen(false);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <dialog open className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <form
-        onSubmit={handleSubmit}
-        method="dialog"
-        className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg"
-      >
-        <h3 className="text-lg font-bold mb-4">Booking Form</h3>
+    <dialog
+      style={{
+        display: isOpen ? "flex" : "none",
+        position: "fixed",
+        inset: "0",
+        zIndex: "50",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+      }}
+      className="modal modal-open"
+    >
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative">
+        <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
+          Booking Form
+        </h2>
 
-        {/* Add your form fields */}
-        <input
-          type="text"
-          placeholder="Tour ID"
-          className="input input-bordered w-full mb-3"
-          value={form.tour_id}
-          onChange={(e) => setForm({ ...form, tour_id: e.target.value })}
-        />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="label font-semibold">Tour ID</label>
+          <input
+            type="text"
+            className="input input-ghosted w-full"
+            placeholder="Enter Tour ID"
+            value={form.tour_id}
+            onChange={(e) => setForm({ ...form, tour_id: e.target.value })}
+            required
+          />
 
-        {/* Submit & Cancel buttons */}
-        <div className="modal-action text-right">
-          <button type="submit" className="btn btn-primary mr-2">Save</button>
-          <button type="button" className="btn btn-error" onClick={() => setIsOpen(false)}>Cancel</button>
-        </div>
-      </form>
+          <label className="label font-semibold">User ID</label>
+          <input
+            type="text"
+            className="input input-ghosted w-full"
+            placeholder="Enter User ID"
+            value={form.user_id}
+            onChange={(e) => setForm({ ...form, user_id: e.target.value })}
+            required
+          />
+
+          <label className="label font-semibold">Booking Date</label>
+          <input
+            type="date"
+            className="input input-bordered w-full"
+            placeholder="Enter Booking Date"
+            value={form.booking_date}
+            onChange={(e) => setForm({ ...form, booking_date: e.target.value })}
+            required
+          />
+          <br />
+
+          <label className="label font-semibold">Number of People</label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="Enter Number of People"
+            value={form.number_of_people}
+            onChange={(e) =>
+              setForm({ ...form, number_of_people: e.target.value })
+            }
+            required
+          />
+
+          <label className="label font-semibold">Total Price</label>
+          <input
+            type="text"
+            step="0.01"
+            min="0"
+            className="input input-bordered w-full"
+            placeholder="Enter Total Price"
+            value={form.total_price}
+            onChange={(e) => setForm({ ...form, total_price: e.target.value })}
+            required
+          />
+          <br />
+          <br />
+
+          <div className="d-flex justify-content-center gap-10 mt-4">
+            <button type="submit" className="btn btn-primary w-full">
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </dialog>
   );
-});
+};
 
 export default BookingForm;

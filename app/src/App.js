@@ -12,6 +12,7 @@ import SideBar from "./components/SideBar";
 import BookingsList from "./components/BookingsList";
 
 
+
 const Layout = ({ children }) => {
   return (
     <div style={{ display: "flex" }}>
@@ -37,6 +38,7 @@ const App = () => {
         <BrowserRouter>
           <ToastContainer />
           <Routes>
+            
             {/* <Route path="/" element={<Login />} />
             <Route path="/signup" element={<Signup />} /> */}
             <Route
