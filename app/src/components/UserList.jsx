@@ -3,8 +3,7 @@ import Modal from "react-modal";
 import UserForm from "./ModalForms/UserForm";
 import axios from "axios";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
-// import "./components_css/userListCss.css";
+import { ToastContainer, toast } from "react-toastify";
 
 Modal.setAppElement("#root");
 
@@ -43,7 +42,7 @@ const UserList = () => {
       toast.success("User created successfully!");
     } catch (error) {
       console.error("Error adding user:", error);
-      toast.error('Faild to add user')
+      toast.error("Faild to add user");
     }
   };
 
@@ -59,7 +58,7 @@ const UserList = () => {
       }
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error('Faild to update user')
+      toast.error("Faild to update user");
     }
   };
 
@@ -74,7 +73,7 @@ const UserList = () => {
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.error('Faild to delete user')
+      toast.error("Faild to delete user");
     }
   };
 
@@ -120,26 +119,25 @@ const UserList = () => {
           style={{ width: "auto" }}
         />
         <button className="btn btn-success" onClick={() => handleOpenModal()}>
-          <FaPlus className="mr-2" /> Add User
+          <FaPlus className="d-inline" /> Add User
         </button>
       </div>
       <table className="table table-dark table-striped">
         <thead>
           <tr>
-            <th>Full Name</th>
-            <th>Activity</th>
-            <th>Status Membership</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
             <th>Created At</th>
             <th>Updated At</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredUsers.map((user) => (
             <tr key={user._id}>
-              <td>{user.fullName}</td>
-              <td>{user.activity}</td>
-              <td>{user.statusMembership}</td>
+              <td>{user.Name}</td>
+              <td>{user.Email}</td>
+              <td>{user.Password}</td>
               <td>{formatDate(user.createdAt)}</td>
               <td>{formatDate(user.updatedAt)}</td>
               <td>
@@ -166,9 +164,9 @@ const UserList = () => {
         onRequestClose={handleCloseModal}
         contentLabel="User Modal"
       >
-        <div className="modal-content bg-dark text-light">
+        <div className="relative">
           <div className="modal-header">
-            <h5 className="modal-title">
+            <h5 className="text-2xl font-bold text-blue-600 text-center mb-6">
               {isEdit ? "Update User" : "Add User"}
             </h5>
             <button
@@ -179,18 +177,11 @@ const UserList = () => {
               <span>&times;</span>
             </button>
           </div>
-          <div className="modal-body">
-            <UserForm
-              initialData={currentUser}
-              onSubmit={handleFormSubmit}
-              isEdit={isEdit}
-            />
-          </div>
-          <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={handleCloseModal}>
-              Close
-            </button>
-          </div>
+          <UserForm
+            initialData={currentUser}
+            onSubmit={handleFormSubmit}
+            isEdit={isEdit}
+          />
         </div>
       </Modal>
       <ToastContainer />

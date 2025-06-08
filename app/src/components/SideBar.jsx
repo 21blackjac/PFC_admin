@@ -54,7 +54,7 @@ const SideBar = () => {
           <div className="header">
             <span className="icon logo" style={{height: "auto"}}>
               <img
-                src="/assets/happtFitnessLogo.jpeg"
+                src="/assets/logo.jpeg"
                 style={{ height: "60px", borderRadius: "50%" }}
               />
             </span>

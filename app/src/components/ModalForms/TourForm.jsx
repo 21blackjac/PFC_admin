@@ -84,15 +84,23 @@ const TourForm = ({
             required
           />
 
-          <label className="label font-semibold">Image URL</label>
+          <label
+            className="label font-semibold"
+          >
+            Image
+          </label>
           <input
-            type="text"
-            name="image_url"
-            value={form.image_url}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="Image URL"
+            type="file"
+            aria-describedby="file_input_help"
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer 
+                   bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 
+                   dark:placeholder-gray-400"
           />
+          <p
+            className="mt-1 text-sm text-gray dark:text-gray"
+          >
+            SVG, PNG, JPG or GIF (MAX. 800x400px).
+          </p>
 
           <label className="label font-semibold">Description</label>
           <textarea

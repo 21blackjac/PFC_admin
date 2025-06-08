@@ -10,17 +10,19 @@ const BookingsList = () => {
   const [form, setForm] = useState({
     user_id: "",
     tour_id: "",
-    booking_date: "",
-    number_of_people: 1,
+    nbr_personnes: 1,
     total_price: "",
     status: "pending",
   });
+  const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/bookings");
+      const response = await axios.get(
+        "http://localhost:8000/api/reservations"
+      );
       setBookings(response.data);
     } catch (err) {
       console.error(err);
@@ -29,13 +31,28 @@ const BookingsList = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:8000/api/bookings", form);
+      if (editingId) {
+        await axios.put(
+          `http://localhost:8000/api/reservations/${editingId}`,form);
+        toast.success("Booking updated successfully");
+      } else {
+        await axios.post("http://localhost:8000/api/reservations", form);
+        toast.success("Booking created successfully");
+      }
+
       fetchBookings();
       setIsModalOpen(false);
-      toast.success("Booking created successfully");
+      setForm({
+        user_id: "",
+        tour_id: "",
+        nbr_personnes: 1,
+        total_price: "",
+        status: "pending",
+      });
+      setEditingId(null);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to create booking");
+      toast.error("Failed to save booking");
     }
   };
 
@@ -43,45 +60,50 @@ const BookingsList = () => {
     fetchBookings();
   }, []);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const filteredBookings = bookings.filter((user) =>
-    user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredBookings = bookings.filter((booking) =>
+    booking.user?.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="container mt-5 bg-dark text-light p-4 rounded">
-      <h1 className="my-4 text-center">
-        Bookings
-      </h1>
-      <div className="d-flex justify-content-between">
+      <h1 className="my-4 text-center">Bookings</h1>
+      <div className="d-flex justify-content-between mb-3">
         <input
           type="text"
           className="form-control"
           placeholder="Search bookings..."
           value={searchTerm}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearchTerm(e.target.value)}
           style={{ width: "auto", height: "40px" }}
         />
         <button
           className="btn btn-success mb-4 w-48"
           style={{ height: "40px" }}
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setForm({
+              user_id: "",
+              tour_id: "",
+              nbr_personnes: 1,
+              total_price: "",
+              status: "pending",
+            });
+            setEditingId(null);
+            setIsModalOpen(true);
+          }}
         >
           <FaPlus className="d-inline" /> Add Booking
         </button>
       </div>
       <div className="overflow-x-auto">
         <table className="table table-dark table-striped">
-          <thead className="bg-gray-200">
-            <tr className="text-gray-700">
+          <thead>
+            <tr>
               <th>User ID</th>
               <th>Tour ID</th>
               <th>Date</th>
               <th>People</th>
               <th>Total</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -90,9 +112,45 @@ const BookingsList = () => {
               <tr key={booking.id}>
                 <td>{booking.user_id}</td>
                 <td>{booking.tour_id}</td>
-                <td>{booking.booking_date}</td>
-                <td>{booking.number_of_people}</td>
+                <td>{booking.reservation_date}</td>
+                <td>{booking.nbr_personnes}</td>
                 <td>{booking.total_price}</td>
+                <td>{booking.status}</td>
+                <td>
+                  <button
+                    className="btn btn-primary me-2"
+                    onClick={() => {
+                      setForm({
+                        user_id: booking.user_id,
+                        tour_id: booking.tour_id,
+                        nbr_personnes: booking.nbr_personnes,
+                        total_price: booking.total_price,
+                        status: booking.status,
+                      });
+                      setEditingId(booking.id);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    <FaEdit /> Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={async () => {
+                      try {
+                        await axios.delete(
+                          `http://localhost:8000/api/reservations/${booking.id}`
+                        );
+                        fetchBookings();
+                        toast.success("Booking deleted successfully");
+                      } catch (err) {
+                        console.error(err);
+                        toast.error("Failed to delete booking");
+                      }
+                    }}
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

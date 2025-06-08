@@ -14,13 +14,11 @@ const ToursList = () => {
     image_url: "",
   });
   const [editingId, setEditingId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTours = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/tours");
-      setTours(res.data);
+      setTours(res.data.data); // Laravel returns { success: true, data: [...] }
     } catch (err) {
       console.error(err);
     }
@@ -30,11 +28,12 @@ const ToursList = () => {
     fetchTours();
   }, []);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       if (editingId) {
         await axios.put(`http://localhost:8000/api/tours/${editingId}`, form);
@@ -50,7 +49,6 @@ const ToursList = () => {
         image_url: "",
       });
       setEditingId(null);
-      setIsModalOpen(false);
       fetchTours();
     } catch (err) {
       console.error(err);
@@ -60,7 +58,6 @@ const ToursList = () => {
   const handleEdit = (tour) => {
     setForm(tour);
     setEditingId(tour.id);
-    setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
@@ -72,40 +69,23 @@ const ToursList = () => {
     }
   };
 
-  const filteredTours = tours.filter((t) =>
-    t.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="container mt-5 bg-dark text-light p-4 rounded">
       <h1 className="text-center mb-4">Tour Management</h1>
 
-      <div className="d-flex justify-content-between mb-3">
+      <div className="d-flex justify-content-between">
         <input
           type="text"
           className="form-control"
-          placeholder="Search tours..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          style={{ width: "300px", height: "40px" }}
+          placeholder="Search bookings..."
+          style={{ width: "auto", height: "40px" }}
         />
         <button
-          className="btn btn-success"
+          className="btn btn-success mb-4 w-48"
           style={{ height: "40px" }}
-          onClick={() => {
-            setForm({
-              title: "",
-              description: "",
-              price: "",
-              duration_days: "",
-              destination_id: "",
-              image_url: "",
-            });
-            setEditingId(null);
-            setIsModalOpen(true);
-          }}
+          onClick={() => setEditingId(-1)} // Open form
         >
-          <FaPlus className="me-1" /> Add Tour
+          <FaPlus className="d-inline" /> Add Tour
         </button>
       </div>
 
@@ -123,13 +103,13 @@ const ToursList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredTours.map((t) => (
+            {tours.map((t) => (
               <tr key={t.id}>
                 <td>{t.id}</td>
                 <td>{t.title}</td>
                 <td>{t.price}</td>
                 <td>{t.duration_days} days</td>
-                <td>{t.destination_id}</td>
+                <td>{t.destination?.name || t.destination_id}</td>
                 <td>
                   <img
                     src={t.image_url}
@@ -161,13 +141,13 @@ const ToursList = () => {
           </tbody>
         </table>
       </div>
-
       <TourForm
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
+        isOpen={!!editingId || editingId === -1}
+        setIsOpen={() => setEditingId(null)}
         form={form}
         setForm={setForm}
         onSubmit={handleSubmit}
+        handleChange={handleChange}
         editingId={editingId}
       />
     </div>
@@ -175,3 +155,14 @@ const ToursList = () => {
 };
 
 export default ToursList;
+
+
+/*
+Route::get('/tours', [TourController::class, 'index']);
+Route::get('/tours/populaire', [TourController::class, 'populaire']);
+Route::get('/tours/{id}', [TourController::class, 'show']);
+
+Route::get('/reservations',[ReservationController::class,'index']);
+Route::Post('/reservations',[ReservationController::class,'store']);
+Route::get('/reservations/{id}', [ReservationController::class, 'show']);
+*/
