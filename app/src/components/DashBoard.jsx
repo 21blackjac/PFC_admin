@@ -1,13 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaUsers, FaMoneyBill, FaList } from "react-icons/fa";
+import { FaUsers, FaPlane, FaBook } from "react-icons/fa";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 import "./components_css/DashboardCss.css";
 
 const DashBoard = () => {
   const [userCount, setUserCount] = useState(0);
   const [tourCount, setTourCount] = useState(0);
-  const [bookingCount, setBookingCount] = useState(0); // ✅ new
-  const [adminList, setAdminList] = useState([]);
+  const [bookingCount, setBookingCount] = useState(0);
+  const [revenueData, setRevenueData] = useState([]);
+
+  const API_BASE = "http://localhost:8000/api";
 
   useEffect(() => {
     fetchSummaryData();
@@ -15,23 +26,17 @@ const DashBoard = () => {
 
   const fetchSummaryData = async () => {
     try {
-      const userResponse = await axios.get(
-        "http://localhost:8050/Users/usersCount"
-      );
-      const tourResponse = await axios.get(
-        "http://localhost:8050/Tours/toursCount"
-      );
-      const bookingResponse = await axios.get(
-        "http://localhost:8050/Bookings/bookingsCount"
-      ); // ✅ new
-      const adminResponse = await axios.get(
-        "http://localhost:8050/Admin/adminsList"
-      );
+      const [userRes, tourRes, bookingRes, revenueRes] = await Promise.all([
+        axios.get(`${API_BASE}/users/usersCount`),
+        axios.get(`${API_BASE}/tours/toursCount`),
+        axios.get(`${API_BASE}/reservations/bookingsCount`),
+        axios.get(`${API_BASE}/reservations/monthly-revenue`), // 🆕
+      ]);
 
-      setUserCount(userResponse.data.count);
-      setTourCount(tourResponse.data.count);
-      setBookingCount(bookingResponse.data.count); // ✅ new
-      setAdminList(adminResponse.data);
+      setUserCount(userRes.data.count);
+      setTourCount(tourRes.data.count);
+      setBookingCount(bookingRes.data.count);
+      setRevenueData(revenueRes.data); // 🆕
     } catch (error) {
       console.error("Error fetching summary data:", error);
     }
@@ -51,36 +56,37 @@ const DashBoard = () => {
           </div>
         </div>
         <div className="dashboard-card">
-          <FaMoneyBill className="card-icon" />
+          <FaPlane className="card-icon" />
           <div className="card-info">
             <h2>{tourCount}</h2>
             <p>Total Tours</p>
           </div>
         </div>
         <div className="dashboard-card">
-          <FaList className="card-icon" />
+          <FaBook className="card-icon" />
           <div className="card-info">
             <h2>{bookingCount}</h2>
             <p>Total Bookings</p>
           </div>
         </div>
       </div>
-      <div className="dashboard-section">
-        <h2>Admins List</h2>
-        <div className="admin-list">
-          {adminList.map((admin) => (
-            <div key={admin._id} className="admin-item">
-              <img
-                src="/assets/avatar.svg"
-                alt="user profile image"
-                className="admin-profile-picture"
+      <div className="dashboard-section mt-6">
+        <h2>💰 Monthly Revenue</h2>
+        <div style={{ width: "100%", height: 300 }}>
+          <ResponsiveContainer>
+            <LineChart data={revenueData}>
+              <CartesianGrid stroke="#ccc" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="total"
+                stroke="#4ade80"
+                strokeWidth={3}
               />
-              <div className="admin-info">
-                <p>Username: {admin.username}</p>
-                <p>Email: {admin.email}</p>
-              </div>
-            </div>
-          ))}
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

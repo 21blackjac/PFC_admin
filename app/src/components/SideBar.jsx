@@ -34,16 +34,15 @@ const SideBar = () => {
   const logout = async () => {
   
     try {
-      await axios.get("http://localhost:8050/Admin/logout");
+      await axios.get("http://127.0.0.1:8000/api/admin/logout");
       localStorage.removeItem("adminId"); // Remove admin ID on logout
   
       // Notify user of successful logout
       toast.success("Logged out successfully!");
   
-      navigate("/", { replace: true });
     } catch (error) {
       console.error("Error logging out:", error);
-      toast.error("Failed to log out. Please try again.");
+      navigate("/", { replace: true });
     }
   };
 

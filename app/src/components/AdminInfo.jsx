@@ -25,7 +25,6 @@ const AdminInfo = () => {
       });
     } catch (error) {
       console.error("Error fetching admin data:", error);
-      toast.error("Failed to fetch admin data");
     }
   };
 
@@ -42,7 +41,6 @@ const AdminInfo = () => {
       fetchAdminData(); // Refresh admin data after update
     } catch (error) {
       console.error("Error updating admin information:", error);
-      toast.error("Failed to update admin information");
     }
   };
 

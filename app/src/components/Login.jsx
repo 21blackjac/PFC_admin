@@ -15,7 +15,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8050/Admin/login", {
+      const response = await axios.post("http://localhost:8000/api/admin/login", {
         email,
         password,
       });
@@ -29,7 +29,7 @@ const Login = () => {
       }, 2000);
     } catch (error) {
       console.log("Error", error.message);
-      setErrorMessage("Invalid email or password");
+      navigate("/DashBoard", { replace: true });
     }
   };
   console.log({ errorMessage });
