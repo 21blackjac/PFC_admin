@@ -30,7 +30,7 @@ const BookingForm = ({ isOpen, setIsOpen, form, setForm, onSubmit }) => {
           <label className="label font-semibold">Tour ID</label>
           <input
             type="text"
-            className="input input-ghosted w-full"
+            className="input input-bordered w-full"
             placeholder="Enter Tour ID"
             value={form.tour_id}
             onChange={(e) => setForm({ ...form, tour_id: e.target.value })}
@@ -40,7 +40,7 @@ const BookingForm = ({ isOpen, setIsOpen, form, setForm, onSubmit }) => {
           <label className="label font-semibold">User ID</label>
           <input
             type="text"
-            className="input input-ghosted w-full"
+            className="input input-bordered w-full"
             placeholder="Enter User ID"
             value={form.user_id}
             onChange={(e) => setForm({ ...form, user_id: e.target.value })}
@@ -51,40 +51,47 @@ const BookingForm = ({ isOpen, setIsOpen, form, setForm, onSubmit }) => {
           <input
             type="date"
             className="input input-bordered w-full"
-            placeholder="Enter Booking Date"
-            value={form.booking_date}
-            onChange={(e) => setForm({ ...form, booking_date: e.target.value })}
+            value={form.reservation_date}
+            onChange={(e) => setForm({ ...form, reservation_date: e.target.value })}
             required
           />
-          <br />
 
           <label className="label font-semibold">Number of People</label>
           <input
-            type="text"
+            type="number"
             className="input input-bordered w-full"
-            placeholder="Enter Number of People"
-            value={form.number_of_people}
+            value={form.nbr_personnes}
             onChange={(e) =>
-              setForm({ ...form, number_of_people: e.target.value })
+              setForm({ ...form, nbr_personnes: e.target.value })
             }
             required
           />
 
           <label className="label font-semibold">Total Price</label>
           <input
-            type="text"
+            type="number"
             step="0.01"
             min="0"
             className="input input-bordered w-full"
-            placeholder="Enter Total Price"
             value={form.total_price}
-            onChange={(e) => setForm({ ...form, total_price: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, total_price: e.target.value })
+            }
             required
           />
-          <br />
-          <br />
 
-          <div className="d-flex justify-content-center gap-10 mt-4">
+          <label className="label font-semibold">Status</label>
+          <select
+            className="select select-bordered w-full"
+            value={form.status}
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
+          >
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+
+          <div className="d-flex justify-content-center gap-4 mt-6">
             <button type="submit" className="btn btn-primary w-full">
               Save
             </button>

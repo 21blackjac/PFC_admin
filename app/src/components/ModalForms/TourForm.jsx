@@ -11,6 +11,7 @@ const TourForm = ({
   editingId,
 }) => {
   const handleChange = (e) => {
+    e.preventDefault();
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -34,6 +35,12 @@ const TourForm = ({
       }}
       className="modal modal-open"
     >
+      <style>
+        {`
+        input, label, textarea {
+          margin-top: 0 !important;
+        `}
+      </style>
       <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative">
         <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
           {editingId ? "Edit Tour" : "Add Tour"}
@@ -65,8 +72,8 @@ const TourForm = ({
           <label className="label font-semibold">Duration (Days)</label>
           <input
             type="text"
-            name="duration_days"
-            value={form.duration_days}
+            name="nbr_jours"
+            value={form.nbr_jours}
             onChange={handleChange}
             className="input input-bordered w-full"
             placeholder="Duration"
@@ -84,23 +91,48 @@ const TourForm = ({
             required
           />
 
-          <label
-            className="label font-semibold"
-          >
-            Image
-          </label>
+          <label className="label font-semibold">Category ID</label>
           <input
-            type="file"
-            aria-describedby="file_input_help"
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer 
-                   bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 
-                   dark:placeholder-gray-400"
+            type="text"
+            name="categorie_id"
+            value={form.categorie_id}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Category ID"
+            required
           />
-          <p
-            className="mt-1 text-sm text-gray dark:text-gray"
-          >
-            SVG, PNG, JPG or GIF (MAX. 800x400px).
-          </p>
+
+          <label className="label font-semibold">Places Available</label>
+          <input
+            type="number"
+            name="nbr_places"
+            value={form.nbr_places}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Number of places"
+            required
+          />
+
+          <label className="label font-semibold">Start Date</label>
+          <input
+            type="date"
+            name="duration_date"
+            value={form.duration_date}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            required
+          />
+
+          <label className="label font-semibold">Image URL</label>
+          <input
+            type="text"
+            name="image_url"
+            value={form.image_url}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="Image URL"
+            required
+          />
 
           <label className="label font-semibold">Description</label>
           <textarea
